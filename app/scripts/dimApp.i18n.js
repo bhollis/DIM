@@ -22,20 +22,33 @@
           Vault: "Deposito"
         })
         .translations('de', {
+          Weapons: "Waffen",
+          Armor: "Schutz",
           Equip: "Ausstatten",
           Vault: "Ausrüstungstresor"
         })
         .translations('fr', {
+          Level: "Niveau",
+          Weapons: "Armes",
+          Armor: "Armure",
+          Equip: "Équiper",
+          Vault: "Coffres"
         })
         .translations('es', {
           Level: "Nivel",
-          Weapons: "Arma",
+          Weapons: "Armas",
           Armor: "Armadura",
+          Equip: "Equipar",
           Vault: "Bóveda"
         })
         .translations('ja', {
         })
         .translations('pt-br', {
+          Level: "Nivel",
+          Weapons: "Armas",
+          Armor: "Armadura",
+          Equip: "Equipar",
+          Vault: "Cofres"
         })
         .fallbackLanguage('en');
     }]);
