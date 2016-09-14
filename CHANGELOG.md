@@ -7,6 +7,7 @@
 * Fixed "Aim assist" stat not showing up in CSV (and no stats showing up if your language wasn't English).
 * We now catch manifest updates that don't update the manifest version - if you see broken images, try reloading DIM and it should pick up new info.
 * Worked around a bug in the manifest data where Ornamenent nodes show up twice.
+* For non-variable items (emblems, shaders, ships, etc) in a loadout, DIM will use whichever copy is already on a character if it can, rather than moving a specific instance from another character.
 
 # 3.10.2
 
