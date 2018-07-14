@@ -145,6 +145,7 @@
     "textcomplete": "^0.17.1",
     "tooltip.js": "^1.2.0",
     "underscore": "^1.8.3",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "yamlparser": "^0.0.2"
   }
 }
