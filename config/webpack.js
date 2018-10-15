@@ -112,7 +112,7 @@ module.exports = (env) => {
 
       rules: [
         {
-          test: /\.js$/,
+          test: /\.(j|t)sx?$/,
           exclude: [/node_modules/, /sql\.js/],
           loader: 'babel-loader',
           options: {
@@ -148,16 +148,6 @@ module.exports = (env) => {
         {
           test: /\.css$/,
           use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
-        },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-        {
-          test: /\.tsx?$/,
-          loader: 'awesome-typescript-loader',
-          options: {
-            useBabel: true,
-            babelCore: '@babel/core',
-            useCache: true
-          }
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {

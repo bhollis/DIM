@@ -6,6 +6,8 @@ module.exports = function(api) {
     'lodash',
     'angularjs-annotate',
     '@babel/plugin-syntax-dynamic-import',
+    ['@babel/plugin-proposal-class-properties', { loose: true }],
+    ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
     [
       '@babel/plugin-transform-runtime',
       {
@@ -15,11 +17,13 @@ module.exports = function(api) {
   ];
 
   if (isProduction) {
+    // Optimize React, at the cost of debuggability
     plugins.push(
       '@babel/plugin-transform-react-constant-elements',
       '@babel/plugin-transform-react-inline-elements'
     );
   } else {
+    // Configure hot reloading
     plugins.push('react-hot-loader/babel');
   }
 
@@ -34,6 +38,7 @@ module.exports = function(api) {
           shippedProposals: true
         }
       ],
+      ['@babel/typescript'],
       ['@babel/preset-react', { useBuiltIns: true, loose: true }]
     ],
     plugins
