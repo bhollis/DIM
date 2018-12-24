@@ -65,5 +65,6 @@ export const D2SupplementalManifestDefinitions = {
   Race: {},
   Faction: {},
   ItemTierType: {},
-  ActivityMode: {}
+  ActivityMode: {},
+  CommonSettings: {}
 };

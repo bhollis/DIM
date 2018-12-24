@@ -33,3 +33,15 @@ export async function getGlobalAlerts(): Promise<GlobalAlert[]> {
   }
   return [];
 }
+
+/**
+ * Get global alerts (like maintenance warnings) from Bungie.
+ */
+export async function getCommonSettings() {
+  const response = await httpAdapter(bungieApiQuery(`/Platform/Settings/`));
+  if (response && response.Response) {
+    console.log(response);
+    return response;
+  }
+  return [];
+}

@@ -30,6 +30,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import * as _ from 'lodash';
 import { D2ManifestService } from '../manifest/manifest-service-json';
+import { getCommonSettings } from '../bungie-api/bungie-core-api';
 
 const lazyTables = [
   'InventoryItem', // DestinyInventoryItemDefinition
@@ -100,6 +101,8 @@ export interface D2ManifestDefinitions {
   Faction: { [hash: number]: DestinyFactionDefinition };
   ItemTierType: { [hash: number]: DestinyItemTierTypeDefinition };
   ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
+
+  CommonSettings: any;
 }
 
 /**
@@ -115,8 +118,9 @@ export const getDefinitions = _.once(getDefinitionsUncached);
  * above (defs.TalentGrid, etc.).
  */
 async function getDefinitionsUncached() {
+  const settingsPromise = getCommonSettings();
   const db = await D2ManifestService.getManifest([...eagerTables, ...lazyTables]);
-  const defs = {};
+  const defs: any = {};
   // Load objects that lazily load their properties from the sqlite DB.
   lazyTables.forEach((tableShort) => {
     const table = `Destiny${tableShort}Definition`;
@@ -143,5 +147,8 @@ async function getDefinitionsUncached() {
     const table = `Destiny${tableShort}Definition`;
     defs[tableShort] = D2ManifestService.getAllRecords(db, table);
   });
+
+  defs.CommonSettings = await settingsPromise;
+
   return defs as D2ManifestDefinitions;
 }
