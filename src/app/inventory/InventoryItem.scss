@@ -1,4 +1,5 @@
 @import '../../scss/variables.scss';
+@import 'ceaser-easing';
 
 .search-hidden {
   opacity: 0.2;
@@ -232,4 +233,28 @@
 .ms-edge .item .item-tag {
   // https://github.com/DestinyItemManager/DIM/issues/3291
   filter: none !important;
+}
+
+.inventory-item-enter,
+.inventory-item-appear {
+  opacity: 0.01;
+  transform: scale(0%);
+}
+
+.inventory-item-enter.inventory-item-enter-active,
+.inventory-item-appear.inventory-item-appear-active {
+  opacity: 1;
+  transform: scale(100%);
+  transition: transform 2000ms $easeOutCubic, opacity 2000ms $easeOutCubic;
+}
+
+.inventory-item-exit {
+  opacity: 1;
+  transform: scale(100%);
+}
+
+.inventory-item-exit.inventory-item-exit-active {
+  opacity: 0.01;
+  transform: scale(0);
+  transition: transform 2000ms $easeInCubic, opacity 2000ms $easeInCubic;
 }

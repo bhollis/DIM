@@ -19,6 +19,7 @@ import { showItemPicker } from '../item-picker/item-picker';
 import { moveItemTo } from './dimItemMoveService.factory';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { t } from 'i18next';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 // Props provided from parents
 interface ProvidedProps {
@@ -112,9 +113,19 @@ class StoreBucket extends React.Component<Props> {
           </StoreBucketDropTarget>
         )}
         <StoreBucketDropTarget equip={false} bucket={bucket} store={store}>
-          {unequippedItems.map((item) => (
-            <StoreInventoryItem key={item.index} item={item} equippedItem={equippedItem} />
-          ))}
+          <TransitionGroup component={null}>
+            {unequippedItems.map((item) => (
+              <CSSTransition
+                key={item.index}
+                classNames="inventory-item"
+                appear={true}
+                timeout={2000}
+              >
+                <StoreInventoryItem item={item} equippedItem={equippedItem} />
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
+
           {bucket.id === '375726501' &&
             _.times(bucket.capacity - unequippedItems.length, (index) => (
               <img src={emptyEngram} className="empty-engram" key={index} />
