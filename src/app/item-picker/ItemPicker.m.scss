@@ -1,12 +1,6 @@
 @import '../../scss/variables.scss';
 
 .itemPicker {
-  h1 {
-    @include destiny-header;
-    font-size: 16px;
-    margin: 0 0 8px 0;
-    display: block;
-  }
   :global(.sheet-contents > div) {
     padding: 8px;
   }
@@ -20,5 +14,15 @@
     flex: 1;
     margin-right: 8px;
     margin-left: 0;
+  }
+}
+
+.itemTile {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  padding: 8px;
+  width: calc(var(--item-size) * 2);
+
+  :global(.item) {
+    flex-shrink: 0;
   }
 }

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'itemPicker': string;
+  'itemTile': string;
   'search': string;
 }
 declare var cssExports: CssExports;

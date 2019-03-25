@@ -93,6 +93,8 @@ class ItemPicker extends React.Component<Props, State> {
     const { allItems, prompt, searchConfig, filters, itemSortOrder } = this.props;
     const { query, equip, height } = this.state;
 
+    const list = true;
+
     const header = (
       <div>
         <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
@@ -119,16 +121,16 @@ class ItemPicker extends React.Component<Props, State> {
           </div>
           <div className="split-buttons">
             <button
-              className={classNames('dim-button', { selected: equip })}
+              className={classNames('dim-button', { selected: !list })}
               onClick={this.setEquip}
             >
-              {t('MovePopup.Equip')}
+              {t('ItemPicker.Compact')}
             </button>
             <button
-              className={classNames('dim-button', { selected: !equip })}
+              className={classNames('dim-button', { selected: list })}
               onClick={this.setStore}
             >
-              {t('MovePopup.Store')}
+              {t('ItemPicker.List')}
             </button>
           </div>
         </div>
@@ -143,13 +145,24 @@ class ItemPicker extends React.Component<Props, State> {
       <Sheet onClose={this.onSheetClosed} header={header} sheetClassName={styles.itemPicker}>
         {({ onClose }) => (
           <div className="sub-bucket" ref={this.itemContainer} style={{ height }}>
-            {items.map((item) => (
-              <ConnectedInventoryItem
-                key={item.index}
-                item={item}
-                onClick={() => this.onItemSelected(item, onClose)}
-              />
-            ))}
+            {items.map((item) =>
+              list ? (
+                <div
+                  className={styles.itemTile}
+                  key={item.index}
+                  onClick={() => this.onItemSelected(item, onClose)}
+                >
+                  <ConnectedInventoryItem item={item} />
+                  {item.name}
+                </div>
+              ) : (
+                <ConnectedInventoryItem
+                  key={item.index}
+                  item={item}
+                  onClick={() => this.onItemSelected(item, onClose)}
+                />
+              )
+            )}
           </div>
         )}
       </Sheet>
