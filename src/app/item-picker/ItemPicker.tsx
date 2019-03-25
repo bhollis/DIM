@@ -18,7 +18,7 @@ import { sortItems } from '../shell/filters';
 import { itemSortOrderSelector } from '../settings/item-sort';
 import classNames from 'classnames';
 import { t } from 'app/i18next-t';
-import './ItemPicker.scss';
+import styles from './ItemPicker.m.scss';
 import { setSetting } from '../settings/actions';
 
 type ProvidedProps = ItemPickerState & {
@@ -96,13 +96,27 @@ class ItemPicker extends React.Component<Props, State> {
     const header = (
       <div>
         <h1 className="destiny">{prompt || t('ItemPicker.ChooseItem')}</h1>
-        <div className="item-picker-search">
+        <div className={styles.search}>
           <SearchFilterInput
             ref={this.filterInput}
             searchConfig={searchConfig}
             placeholder="Search items"
             onQueryChanged={this.onQueryChanged}
           />
+          <div className="split-buttons">
+            <button
+              className={classNames('dim-button', { selected: equip })}
+              onClick={this.setEquip}
+            >
+              {t('MovePopup.Equip')}
+            </button>
+            <button
+              className={classNames('dim-button', { selected: !equip })}
+              onClick={this.setStore}
+            >
+              {t('MovePopup.Store')}
+            </button>
+          </div>
           <div className="split-buttons">
             <button
               className={classNames('dim-button', { selected: equip })}
@@ -126,7 +140,7 @@ class ItemPicker extends React.Component<Props, State> {
     const items = sortItems(allItems.filter(filter), itemSortOrder);
 
     return (
-      <Sheet onClose={this.onSheetClosed} header={header} sheetClassName="item-picker">
+      <Sheet onClose={this.onSheetClosed} header={header} sheetClassName={styles.itemPicker}>
         {({ onClose }) => (
           <div className="sub-bucket" ref={this.itemContainer} style={{ height }}>
             {items.map((item) => (
