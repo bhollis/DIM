@@ -40,6 +40,7 @@ import { loadingTracker } from '../shell/loading-tracker';
 import { D2SeasonInfo, D2SeasonEnum, D2CurrentSeason, D2CalculatedSeason } from './d2-season-info';
 import { showNotification } from '../notifications/notifications';
 import { clearRatings } from '../item-review/actions';
+import copy from 'fast-copy';
 
 export function mergeCollectibles(
   profileCollectibles: SingleComponentResponse<DestinyProfileCollectiblesComponent>,
@@ -288,6 +289,17 @@ function makeD2StoresService(): D2StoreServiceType {
 
       const stores = [...characters, vault];
       _stores = stores;
+
+      const current = stores.find((s) => s.current)!;
+      const modulus2 = current.buckets[buckets.byType.Consumables.id].find(
+        (i) => i.hash === 3782248531
+      )!;
+      modulus2.amount = 15;
+      const modulus = copy(modulus2);
+      modulus.amount = 5;
+      modulus.location = buckets.byType.LostItems;
+      current.items.push(modulus);
+      current.buckets[buckets.byType.LostItems.id].push(modulus);
 
       updateVaultCounts(buckets, characters.find((c) => c.current)!, vault as D2Vault);
 
