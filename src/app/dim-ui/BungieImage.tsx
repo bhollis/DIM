@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import classNames from 'classnames';
+import styles from './BungieImage.m.scss';
 
 /**
  * A relative path to a Bungie.net image asset.
@@ -17,7 +19,50 @@ export default function BungieImage(
 ) {
   const { src, ...otherProps } = props;
 
-  return <img src={bungieNetPath(src)} {...otherProps} />;
+  const [downloaded, setDownloaded] = useState(false);
+  const ref = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    let image: HTMLImageElement | undefined;
+    let observer: IntersectionObserver | undefined = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const { isIntersecting } = entry;
+
+        if (isIntersecting) {
+          image = new Image();
+          image.onload = () => {
+            setDownloaded(true);
+
+            if (observer) {
+              observer.disconnect();
+              observer = undefined;
+            }
+          };
+
+          image.src = bungieNetPath(src);
+        }
+      });
+    });
+
+    observer.observe(ref.current!);
+
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+      if (image) {
+        image.src = '';
+      }
+    };
+  }, []);
+
+  return (
+    <img
+      ref={ref}
+      className={classNames(styles.bungieImage, { [styles.downloaded]: downloaded })}
+      src={bungieNetPath(src)}
+      {...otherProps}
+    />
+  );
 }
 
 /**
