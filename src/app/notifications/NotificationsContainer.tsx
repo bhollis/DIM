@@ -37,7 +37,6 @@ export default class NotificationsContainer extends React.Component<{}, State> {
     return (
       <div className="notifications-container">
         <Transition
-          native={true}
           items={notifications}
           config={spring}
           keys={(item) => item.id}

@@ -5,6 +5,7 @@ import { toggleCollapsedSection } from '../settings/actions';
 import { Dispatch } from 'redux';
 import { AppIcon, expandIcon, collapseIcon } from '../shell/icons';
 import classNames from 'classnames';
+import { Transition, animated } from 'react-spring';
 import './CollapsibleTitle.scss';
 
 interface ProvidedProps {
@@ -58,7 +59,22 @@ class CollapsibleTitle extends React.Component<Props> {
           </span>
           {extra}
         </div>
-        {!collapsed && children}
+        <Transition
+          items={collapsed}
+          initial={null}
+          from={{ height: 0 }}
+          enter={{ height: 'auto' }}
+          leave={{ height: 0 }}
+        >
+          {(collapsed) =>
+            !collapsed &&
+            ((styles) => (
+              <animated.div className="collapse-content" style={styles}>
+                {children}
+              </animated.div>
+            ))
+          }
+        </Transition>
       </>
     );
   }
