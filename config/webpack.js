@@ -17,6 +17,8 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const i18nextWebpackPlugin = require('i18next-scanner-webpack');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -117,14 +119,14 @@ module.exports = (env) => {
         {
           test: /\.js$/,
           exclude: [/node_modules/],
-          loader: 'babel-loader',
+          loader: require.resolve('babel-loader'),
           options: {
             cacheDirectory: true
           }
         },
         {
           test: /\.html$/,
-          loader: 'html-loader',
+          loader: require.resolve('html-loader'),
           options: {
             exportAsEs6Default: true,
             minimize: true
@@ -132,7 +134,7 @@ module.exports = (env) => {
         },
         {
           test: /\.(jpg|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
-          loader: 'url-loader',
+          loader: require.resolve('url-loader'),
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
             name: ASSET_NAME_PATTERN
@@ -144,7 +146,7 @@ module.exports = (env) => {
           use: [
             isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
             {
-              loader: 'css-modules-typescript-loader',
+              loader: require.resolve('css-modules-typescript-loader'),
               options: {
                 mode: process.env.CI ? 'verify' : 'emit'
               }
@@ -182,15 +184,22 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
         {
           test: /\.tsx?$/,
-          loader: 'awesome-typescript-loader',
-          options: {
-            useBabel: true,
-            babelCore: '@babel/core',
-            useCache: true
-          }
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            },
+            {
+              loader: 'ts-loader',
+              // disable type checker - we will use it in fork plugin
+              options:  PnpWebpackPlugin.tsLoaderOptions({transpileOnly: true}),
+            }
+          ]
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
@@ -226,6 +235,9 @@ module.exports = (env) => {
 
     resolve: {
       extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
+      plugins: [
+        PnpWebpackPlugin,
+      ],
 
       alias: {
         app: path.resolve('./src/app/'),
@@ -234,8 +246,16 @@ module.exports = (env) => {
       }
     },
 
+    resolveLoader: {
+      plugins: [
+        PnpWebpackPlugin.moduleLoader(module),
+      ],
+    },
+
     plugins: [
       new CaseSensitivePathsPlugin(),
+
+      new ForkTsCheckerWebpackPlugin(),
 
       new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
 
@@ -407,7 +427,7 @@ module.exports = (env) => {
     config.module.rules.push({
       test: /\.jsx?$/,
       include: /node_modules/,
-      use: ['react-hot-loader/webpack']
+      use: [require.resolve('react-hot-loader/webpack')]
     });
   } else {
     config.plugins.push(
