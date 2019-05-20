@@ -18,11 +18,16 @@
 }
 
 .itemTile {
-  composes: flexRow from '../dim-ui/common.m.scss';
-  padding: 8px;
-  width: calc(var(--item-size) * 2);
+  composes: flexWrap from '../dim-ui/common.m.scss';
 
   :global(.item) {
     flex-shrink: 0;
   }
+}
+
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-rows: repeat(auto-fill, calc(var(--item-size) + 32px));
+  grid-gap: 4px;
 }

@@ -144,7 +144,7 @@ class ItemPicker extends React.Component<Props, State> {
     return (
       <Sheet onClose={this.onSheetClosed} header={header} sheetClassName={styles.itemPicker}>
         {({ onClose }) => (
-          <div className="sub-bucket" ref={this.itemContainer} style={{ height }}>
+          <div className={styles.itemGrid} ref={this.itemContainer} style={{ height }}>
             {items.map((item) =>
               list ? (
                 <div
