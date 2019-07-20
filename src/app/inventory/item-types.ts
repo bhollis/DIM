@@ -313,6 +313,7 @@ export interface DimObjective {
   /** Override display styles for objectives, such as 'trials' or 'integer' */
   // TODO: fold 'boolean' into this
   displayStyle: string | null;
+  hash: number;
 }
 
 export interface DimFlavorObjective {

@@ -76,7 +76,7 @@ export default function Objective({
       <div className="objective-checkbox" />
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle} />
-        <div className="objective-description">{displayName}</div>
+        <ObjectiveDescription displayName={displayName} objectiveDef={objectiveDef} defs={defs} />
         {objectiveDef.allowOvercompletion && completionValue === 1 ? (
           <div className="objective-text">{formatter.format(progress)}</div>
         ) : (

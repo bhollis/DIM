@@ -911,7 +911,8 @@ function buildObjectives(
         complete,
         boolean: booleanValue,
         displayStyle,
-        display
+        display,
+        hash: objective.objectiveHash
       };
     });
 }
