@@ -13,6 +13,7 @@ import { percent } from '../shell/filters';
 
 interface Props {
   presentationNodeHash: number;
+  characterId?: string;
   defs: D2ManifestDefinitions;
   buckets?: InventoryBuckets;
   profileResponse: DestinyProfileResponse;
@@ -64,7 +65,8 @@ export default class PresentationNode extends React.Component<Props> {
       ownedItemHashes,
       path,
       collectionCounts,
-      onNodePathSelected
+      onNodePathSelected,
+      characterId
     } = this.props;
     const presentationNodeDef = defs.PresentationNode.get(presentationNodeHash);
     if (presentationNodeDef.redacted) {
@@ -185,6 +187,7 @@ export default class PresentationNode extends React.Component<Props> {
               key={node.presentationNodeHash}
               presentationNodeHash={node.presentationNodeHash}
               defs={defs}
+              characterId={characterId}
               profileResponse={profileResponse}
               buckets={buckets}
               ownedItemHashes={ownedItemHashes}
@@ -219,6 +222,7 @@ export default class PresentationNode extends React.Component<Props> {
                     recordHash={record.recordHash}
                     defs={defs}
                     profileResponse={profileResponse}
+                    characterId={characterId}
                   />
                 ))}
               </div>

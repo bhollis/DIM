@@ -21,6 +21,7 @@ interface Props {
   profileResponse: DestinyProfileResponse;
   buckets?: InventoryBuckets;
   defs: D2ManifestDefinitions;
+  characterId?: string;
 
   // This is a hack because emotes aren't in the Collections
   plugSetHashes?: Set<string>;
@@ -44,7 +45,8 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
       buckets,
       profileResponse,
       ownedItemHashes,
-      plugSetHashes
+      plugSetHashes,
+      characterId
     } = this.props;
     const { nodePath } = this.state;
 
@@ -69,7 +71,12 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
       <>
         {presentationNodeHash === 1024788583 && !!trackedRecordHash && (
           <div className="records">
-            <Record recordHash={trackedRecordHash} defs={defs} profileResponse={profileResponse} />
+            <Record
+              recordHash={trackedRecordHash}
+              defs={defs}
+              profileResponse={profileResponse}
+              characterId={characterId}
+            />
           </div>
         )}
 
@@ -83,6 +90,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
           path={fullNodePath}
           onNodePathSelected={this.onNodePathSelected}
           parents={[]}
+          characterId={characterId}
         />
 
         {buckets &&

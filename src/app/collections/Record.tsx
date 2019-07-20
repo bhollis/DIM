@@ -22,16 +22,17 @@ interface Props {
   recordHash: number;
   defs: D2ManifestDefinitions;
   profileResponse: DestinyProfileResponse;
+  characterId?: string;
 }
 
 export default class Record extends React.Component<Props> {
   render() {
-    const { recordHash, defs, profileResponse } = this.props;
+    const { recordHash, defs, profileResponse, characterId } = this.props;
     const recordDef = defs.Record.get(recordHash);
     if (!recordDef) {
       return null;
     }
-    const record = getRecordComponent(recordDef, profileResponse);
+    const record = getRecordComponent(recordDef, profileResponse, characterId);
 
     if (record === undefined || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
       return null;
@@ -105,13 +106,14 @@ export default class Record extends React.Component<Props> {
 
 export function getRecordComponent(
   recordDef: DestinyRecordDefinition,
-  profileResponse: DestinyProfileResponse
+  profileResponse: DestinyProfileResponse,
+  characterId?: string
 ): DestinyRecordComponent | undefined {
-  return recordDef.scope === DestinyScope.Character
-    ? profileResponse.characterRecords.data
-      ? Object.values(profileResponse.characterRecords.data)[0].records[recordDef.hash]
-      : undefined
-    : profileResponse.profileRecords.data
-    ? profileResponse.profileRecords.data.records[recordDef.hash]
-    : undefined;
+  const component =
+    recordDef.scope === DestinyScope.Character
+      ? characterId
+        ? idx(profileResponse, (p) => p.characterRecords.data[characterId].records[recordDef.hash])
+        : undefined
+      : idx(profileResponse, (p) => p.profileRecords.data.records[recordDef.hash]);
+  return component || undefined;
 }
