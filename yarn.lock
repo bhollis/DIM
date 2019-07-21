@@ -1087,14 +1087,6 @@
     "@types/uglify-js" "*"
     source-map "^0.6.0"
 
-"@typescript-eslint/eslint-plugin-tslint@^1.4.2":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin-tslint/-/eslint-plugin-tslint-1.12.0.tgz#5c1accf2b844a815752c4c1c812af69ce2e24d6d"
-  integrity sha512-pTysXDmbCdNTBn0pHwiTpjv6eqaXFzc/610BDZbLorB9QJT8OGMVbw8ZAcnY5aZlkXH/7kE70zehX+0v+U6f7g==
-  dependencies:
-    "@typescript-eslint/experimental-utils" "1.12.0"
-    lodash.memoize "^4.1.2"
-
 "@typescript-eslint/eslint-plugin@^1.4.2":
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-1.12.0.tgz#96b4e08b5f998a198b8414508b1a289f9e8c549a"
@@ -5773,11 +5765,6 @@ lodash._reinterpolate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
   integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
-
-lodash.memoize@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
-  integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
 
 lodash.tail@^4.1.1:
   version "4.1.1"
