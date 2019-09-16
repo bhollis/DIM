@@ -17,6 +17,8 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const i18nextWebpackPlugin = require('i18next-scanner-webpack');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -185,7 +187,7 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
           test: /\.tsx?$/,
           use: [
@@ -194,9 +196,6 @@ module.exports = (env) => {
               options: {
                 cacheDirectory: true
               }
-            },
-            {
-              loader: 'ts-loader'
             }
           ]
         },
@@ -255,6 +254,10 @@ module.exports = (env) => {
       }),
 
       new NotifyPlugin('DIM', !isDev),
+
+      new ForkTsCheckerWebpackPlugin({
+        eslint: true
+      }),
 
       new MiniCssExtractPlugin({
         filename: isDev ? '[name]-[hash].css' : '[name]-[contenthash:6].css',
@@ -408,8 +411,9 @@ module.exports = (env) => {
 
   if (isDev) {
     config.plugins.push(
-      new WebpackNotifierPlugin({
+      new ForkTsCheckerNotifierWebpackPlugin({
         title: 'DIM',
+        excludeWarnings: false,
         alwaysNotify: true,
         contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
       })

@@ -9,7 +9,16 @@ module.exports = function(api) {
       {
         useESModules: true
       }
-    ]
+    ],
+    '@babel/proposal-class-properties',
+    '@babel/proposal-object-rest-spread',
+    [
+      'const-enum',
+      {
+        transform: 'constObject'
+      }
+    ],
+    ['@babel/plugin-transform-typescript', { isTSX: true }]
   ];
 
   if (isProduction) {
