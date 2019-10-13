@@ -190,23 +190,15 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
         {
           test: /\.tsx?$/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                cacheDirectory: true
-              }
-            },
-            {
-              loader: 'ts-loader',
-              options: {
-                experimentalFileCaching: true
-              }
-            }
-          ]
+          loader: 'awesome-typescript-loader',
+          options: {
+            useBabel: true,
+            babelCore: '@babel/core',
+            useCache: true
+          }
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
