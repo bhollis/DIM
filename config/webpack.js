@@ -201,7 +201,10 @@ module.exports = (env) => {
               }
             },
             {
-              loader: 'ts-loader'
+              loader: 'ts-loader',
+              options: {
+                experimentalFileCaching: true
+              }
             }
           ]
         },

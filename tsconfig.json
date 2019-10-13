@@ -16,6 +16,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "allowJs": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "paths": {
       "app/*": ["src/app/*"],
       "data/*": ["src/data/*"],
