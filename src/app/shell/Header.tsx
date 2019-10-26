@@ -2,13 +2,11 @@ import clsx from 'clsx';
 import { t } from 'app/i18next-t';
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
 import { router } from '../router';
 import './header.scss';
 
 import logo from 'images/logo-type-right-light.svg';
-import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
@@ -27,6 +25,7 @@ import MenuAccounts from 'app/accounts/MenuAccounts';
 import ReactDOM from 'react-dom';
 import Sheet from 'app/dim-ui/Sheet';
 import _ from 'lodash';
+import Menu from './Menu';
 
 const destiny1Links = [
   {
@@ -227,38 +226,27 @@ class Header extends React.PureComponent<Props, State> {
             <MenuBadge />
           </a>
         </GlobalHotkeys>
-        <TransitionGroup>
-          {dropdownOpen && (
-            <CSSTransition clsx="dropdown" timeout={{ enter: 500, exit: 500 }}>
-              <ClickOutside
-                key="dropdown"
-                className="dropdown"
-                onClickOutside={this.hideDropdown}
-                role="menu"
+        <Menu open={dropdownOpen} onDropdownOpen={(open) => this.setState({ dropdownOpen: open })}>
+          {destinyLinks}
+          <hr />
+          <Link state="settings" text={t('Settings.Settings')} />
+          {installPromptEvent ? (
+            <a className="link" onClick={this.installDim}>
+              {t('Header.InstallDIM')}
+            </a>
+          ) : (
+            iosPwaAvailable && (
+              <a
+                className="link"
+                onClick={() => this.setState({ promptIosPwa: true, dropdownOpen: false })}
               >
-                {destinyLinks}
-                <hr />
-                <Link state="settings" text={t('Settings.Settings')} />
-                {installPromptEvent ? (
-                  <a className="link" onClick={this.installDim}>
-                    {t('Header.InstallDIM')}
-                  </a>
-                ) : (
-                  iosPwaAvailable && (
-                    <a
-                      className="link"
-                      onClick={() => this.setState({ promptIosPwa: true, dropdownOpen: false })}
-                    >
-                      {t('Header.InstallDIM')}
-                    </a>
-                  )
-                )}
-                {dimLinks}
-                <MenuAccounts closeDropdown={this.hideDropdown} />
-              </ClickOutside>
-            </CSSTransition>
+                {t('Header.InstallDIM')}
+              </a>
+            )
           )}
-        </TransitionGroup>
+          {dimLinks}
+          <MenuAccounts closeDropdown={this.hideDropdown} />
+        </Menu>
         <UISref to="default-account">
           <img
             className={clsx('logo', 'link', $DIM_FLAVOR)}

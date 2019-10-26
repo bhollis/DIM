@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 export const ClickOutsideContext = React.createContext(new Subject<React.MouseEvent>());
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  innerRef?(node: HTMLElement): void;
   onClickOutside(event: React.MouseEvent): void;
 }
 
@@ -15,7 +16,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export default class ClickOutside extends React.Component<Props> {
   static contextType = ClickOutsideContext;
   context!: React.ContextType<typeof ClickOutsideContext>;
-  private wrapperRef = React.createRef<HTMLDivElement>();
+  private wrapperRef: HTMLDivElement | null = null;
   private subscriptions = new Subscriptions();
 
   componentDidMount() {
@@ -30,17 +31,24 @@ export default class ClickOutside extends React.Component<Props> {
     const { onClickOutside, ...other } = this.props;
 
     return (
-      <div ref={this.wrapperRef} {...other}>
+      <div ref={this.setRef} {...other}>
         {this.props.children}
       </div>
     );
   }
 
+  private setRef = (elem: HTMLDivElement) => {
+    this.wrapperRef = elem;
+    if (this.props.innerRef) {
+      this.props.innerRef(elem);
+    }
+  };
+
   /**
    * Alert if clicked on outside of element
    */
   private handleClickOutside = (event: React.MouseEvent) => {
-    if (this.wrapperRef.current && !this.wrapperRef.current.contains(event.target as Node)) {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target as Node)) {
       this.props.onClickOutside(event);
     }
   };
