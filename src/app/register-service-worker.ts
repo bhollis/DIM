@@ -1,6 +1,7 @@
 import { reportException } from './utils/exceptions';
 import { BehaviorSubject, empty, from, timer, of, combineLatest } from 'rxjs';
 import { switchMap, catchError, map, distinctUntilChanged, shareReplay, tap } from 'rxjs/operators';
+import { Workbox } from 'workbox-window';
 
 /**
  * A function that will attempt to update the service worker in place.
@@ -50,20 +51,98 @@ export const dimNeedsUpdate$ = combineLatest(
   distinctUntilChanged()
 );
 
+export const wb = new Workbox('/service-worker.js');
+
 /**
  * If Service Workers are supported, install our Service Worker and listen for updates.
  */
-export default function registerServiceWorker() {
+export default async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) {
     return;
   }
+
+  wb.addEventListener('installed', (event) => {
+    if (event.isUpdate) {
+      // At this point, the old content will have been purged and
+      // the fresh content will have been added to the cache.
+      // It's the perfect time to display a "New content is
+      // available; please refresh." message in your web app.
+      console.log('SW: New content is available; please refresh. (from onupdatefound)');
+      // At this point, is it really cached??
+
+      serviceWorkerUpdated$.next(true);
+
+      let preventDevToolsReloadLoop;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        // Ensure refresh is only called once.
+        // This works around a bug in "force update on reload".
+        if (preventDevToolsReloadLoop) {
+          return;
+        }
+        preventDevToolsReloadLoop = true;
+        window.location.reload();
+      });
+    }
+  });
+
+  wb.addEventListener('activated', (event) => {
+    // `event.isUpdate` will be true if another version of the service
+    // worker was controlling the page when this version was registered.
+    if (!event.isUpdate) {
+      console.log('Service worker activated for the first time!');
+
+      // If your service worker is configured to precache assets, those
+      // assets should all be available now.
+    }
+  });
+
+  wb.addEventListener('waiting', (event) => {
+    console.log(
+      `A new service worker has installed, but it can't activate` +
+        `until all tabs running the current version have fully unloaded.`
+    );
+  });
+
+  // If an external service worker has installed, it likely means a user is running a newer version of your site in a different tab.
+  wb.addEventListener('externalinstalled', (event) => {
+    console.log(`a user is running a newer version of your site in a different tab.`);
+  });
+
+  // If an external service worker is waiting to activate, it likely means a user has is attempting to get a new version of your site in another tab, but they're blocked because this tab is still open.
+  wb.addEventListener('externalwaiting', (event) => {
+    console.log(`a user is running a newer version of your site in a different tab.`);
+  });
+
+  // If an external service worker has activated, there's a good chance that the current page will not continue to function properly. You may want to consider showing a notification to the user that they're running an older version of the page and things may be broken.
+  wb.addEventListener('externalactivated', (event) => {
+    console.log(`a user is running a newer version of your site in a different tab.`);
+  });
+  // If we have access to the broadcast channel API, use that to listen
+  // for whether there are actual content updates from Workbox.
+  if ('BroadcastChannel' in window) {
+    const messageListener = (event) => {
+      if (event.data.type === 'CACHE_UPDATED') {
+        console.log('SW: Service worker cached updated files');
+        contentChanged$.next(true);
+        wb.removeEventListener('message', messageListener);
+      }
+    };
+    wb.addEventListener('message', messageListener);
+  } else {
+    // We have to assume a newly installed service worker means new content. This isn't
+    // as good since we may say we updated when the content is the same.
+    contentChanged$.next(true);
+  }
+
+  const registration = wb.register();
+
   navigator.serviceWorker
     .register('/service-worker.js')
     .then((registration) => {
       // If we have access to the broadcast channel API, use that to listen
       // for whether there are actual content updates from Workbox.
       if ('BroadcastChannel' in window) {
-        const updateChannel = new BroadcastChannel('precache-updates');
+        const updateChannel = new BroadcastChannel('workbox');
 
         const updateMessage = () => {
           console.log('SW: Service worker cached updated files');

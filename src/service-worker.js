@@ -1,6 +1,6 @@
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 
-workbox.precaching.addPlugins([new workbox.broadcastUpdate.Plugin('precache-updates')]);
+workbox.precaching.addPlugins([new workbox.broadcastUpdate.Plugin()]);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 workbox.precaching.cleanupOutdatedCaches();
 
