@@ -8,6 +8,7 @@ import ItemSockets from '../item-popup/ItemSockets';
 import { StatInfo } from './Compare';
 import CompareStat from './CompareStat';
 import ItemTalentGrid from '../item-popup/ItemTalentGrid';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 
 export default function CompareItem({
   item,
@@ -37,7 +38,9 @@ export default function CompareItem({
       <div className="item-name" onClick={() => itemClick(item)}>
         {item.name} <AppIcon icon={searchIcon} />
       </div>
-      <ConnectedInventoryItem item={item} onClick={() => itemClick(item)} />
+      <ItemPopupTrigger item={item} alwaysShowPopup={true}>
+        {(ref, onClick) => <ConnectedInventoryItem item={item} onClick={onClick} innerRef={ref} />}
+      </ItemPopupTrigger>
       {stats.map((stat) => (
         <CompareStat
           key={stat.id}

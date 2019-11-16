@@ -8,6 +8,13 @@ import { showItemPopup, ItemPopupExtraInfo } from '../item-popup/item-popup';
 interface Props {
   item: DimItem;
   extraData?: ItemPopupExtraInfo;
+  /** This is a dirty hack to bypass the compare/loadout logic for items that are already in a drawer. */
+  alwaysShowPopup?: boolean;
+  /**
+   * Children should be a function that takes a ref and an onClick function, and applies them
+   * to the right elements. ref should be set on the item that will anchor the popup, and
+   * onClick should be set on whatever can be clicked to show the popup.
+   */
   children(ref: React.Ref<HTMLDivElement>, onClick: (e: React.MouseEvent) => void): React.ReactNode;
 }
 
@@ -26,14 +33,14 @@ export default class ItemPopupTrigger extends React.Component<Props> {
   private clicked = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const { item, extraData } = this.props;
+    const { item, extraData, alwaysShowPopup } = this.props;
 
     NewItemsService.dropNewItem(item);
 
     // TODO: a dispatcher based on store state?
-    if (dimLoadoutService.dialogOpen) {
+    if (!alwaysShowPopup && dimLoadoutService.dialogOpen) {
       dimLoadoutService.addItemToLoadout(item, e);
-    } else if (CompareService.dialogOpen) {
+    } else if (!alwaysShowPopup && CompareService.dialogOpen) {
       CompareService.addItemsToCompare([item]);
     } else {
       showItemPopup(item, this.ref.current!, extraData);
