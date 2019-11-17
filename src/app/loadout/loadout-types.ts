@@ -43,6 +43,13 @@ export interface Loadout {
   name: string;
   items: {
     [type: string]: LoadoutItem[];
+  } & {
+    unknown?: {
+      id: string;
+      hash: number;
+      amount: number;
+      equipped: boolean;
+    }[];
   };
   /** Platform membership ID this loadout is associated with */
   membershipId?: string;

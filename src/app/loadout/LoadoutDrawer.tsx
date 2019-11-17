@@ -87,9 +87,18 @@ interface StoreProps {
 
 type Props = StoreProps;
 
+export interface WarnItem {
+  id: string;
+  hash: number;
+  amount: number;
+  equipped: boolean;
+  icon?: string;
+  name?: string;
+}
+
 interface State {
   loadout?: Loadout;
-  warnitems: DimItem[];
+  warnitems: WarnItem[];
   show: boolean;
   showClass: boolean;
   isNew: boolean;
@@ -273,9 +282,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     loadout.membershipId = account.membershipId;
 
     // Filter out any vendor items and equip all if requested
-    const warnitems = Object.values(loadout.items).flatMap((items) =>
-      items.filter((item) => !item.owner)
-    );
+    const warnitems = loadout.items.unknown || [];
     this.fillInDefinitionsForWarnItems(this.props.account.destinyVersion, warnitems);
 
     _.forIn(loadout.items, (items, type) => {
@@ -294,7 +301,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     });
   };
 
-  private fixWarnItem = async (warnItem: DimItem) => {
+  private fixWarnItem = async (warnItem: WarnItem) => {
     const { loadout } = this.state;
 
     const loadoutClassType = loadout && loadoutClassToClassType[loadout.classType];
@@ -463,7 +470,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     loadoutDialogOpen = false;
   };
 
-  private fillInDefinitionsForWarnItems = (destinyVersion: 1 | 2, warnitems: DimItem[]) => {
+  private fillInDefinitionsForWarnItems = (destinyVersion: 1 | 2, warnitems: WarnItem[]) => {
     if (!warnitems || !warnitems.length) {
       return;
     }
@@ -493,7 +500,7 @@ class LoadoutDrawer extends React.Component<Props, State> {
     }
   };
 
-  private removeWarnItem = (item: DimItem) => {
+  private removeWarnItem = (item: WarnItem) => {
     const { warnitems } = this.state;
 
     this.setState({

@@ -11,14 +11,19 @@ import { default as reduxStore } from '../store/store';
 import * as actions from './actions';
 import { loadoutsSelector } from './reducer';
 import { showNotification } from '../notifications/notifications';
-import { LoadoutClass, LoadoutItem, Loadout } from './loadout-types';
+import { LoadoutClass, Loadout } from './loadout-types';
 
 /** The format loadouts are stored in. */
 interface DehydratedLoadout {
   id: string;
   classType: LoadoutClass;
   name: string;
-  items: LoadoutItem[];
+  items: {
+    id: string;
+    hash: number;
+    amount: number;
+    equipped: boolean;
+  }[];
   destinyVersion?: 1 | 2;
   /** Platform membership ID this loadout is associated with */
   membershipId?: string;
@@ -153,14 +158,14 @@ function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
     );
 
     if (item) {
-      const discriminator = item.type.toLowerCase();
+      const type = item.type.toLowerCase();
 
       item.equipped = itemPrimitive.equipped;
 
       item.amount = itemPrimitive.amount;
 
-      result.items[discriminator] = result.items[discriminator] || [];
-      result.items[discriminator].push(item);
+      result.items[type] = result.items[type] || [];
+      result.items[type].push(item);
     } else {
       const loadoutItem = {
         id: itemPrimitive.id,
@@ -169,7 +174,7 @@ function hydratev3d0(loadoutPrimitive: DehydratedLoadout): Loadout {
         equipped: itemPrimitive.equipped
       };
 
-      result.items.unknown.push(loadoutItem as DimItem);
+      result.items.unknown!.push(loadoutItem);
     }
   }
 
@@ -184,7 +189,7 @@ function dehydrate(loadout: Loadout): DehydratedLoadout {
     hash: item.hash,
     amount: item.amount,
     equipped: item.equipped
-  })) as DimItem[];
+  }));
 
   return {
     id: loadout.id,

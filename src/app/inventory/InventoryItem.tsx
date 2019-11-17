@@ -13,6 +13,7 @@ import NewItemIndicator from './NewItemIndicator';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassVoid from 'images/subclass-void.png';
+import { WarnItem } from 'app/loadout/LoadoutDrawer';
 
 const tagIcons: { [tag: string]: IconDefinition | undefined } = {};
 itemTagList.forEach((tag) => {
@@ -22,7 +23,7 @@ itemTagList.forEach((tag) => {
 });
 
 interface Props {
-  item: DimItem;
+  item: DimItem | WarnItem;
   /** Show this item as new? */
   isNew?: boolean;
   /** User defined tag */
