@@ -11,22 +11,19 @@
 
   box-sizing: border-box;
   cursor: pointer;
-  background-color: #555;
-  padding: 4px 6px 4px 10px;
+  background-color: #222;
   display: inline-block;
-  border: none;
-  color: white;
+  border: 1px solid #777;
+  color: #ddd;
   font-size: 12px;
   font-family: 'Open Sans', sans-serif;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  &:hover {
-    background-color: $orange;
+  &:hover,
+  &:active,
+  &.selected {
+    background-color: #555;
+    border-color: white;
   }
-  &:active {
-    box-shadow: none;
-    background-color: $orange;
-  }
+  padding: 6px 6px 6px 10px;
   input {
     margin-left: 4px;
     float: right;

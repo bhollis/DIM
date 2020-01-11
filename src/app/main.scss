@@ -340,22 +340,19 @@ select {
 
 .dim-button {
   cursor: pointer;
-  background-color: #555;
-  padding: 4px 10px;
+  background-color: #222;
+  padding: 6px 10px;
   display: inline-block;
-  border: none;
-  color: white;
+  border: 1px solid transparent;
+  color: #ddd;
   font-size: 12px;
   font-family: 'Open Sans', sans-serif;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  &:hover {
-    background-color: $orange;
-  }
+  transition: all 150ms ease-in-out;
+  &:hover,
   &:active,
   &.selected {
-    box-shadow: none;
-    background-color: $orange;
+    background-color: #444;
+    border-color: white;
   }
   input {
     display: none;
